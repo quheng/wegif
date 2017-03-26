@@ -12,6 +12,8 @@ image_name = 'tmp.gif' # to-do
 TRIGGER_WORD = '/gif'
 
 def get_image(key_word):
+    if not key_word:
+        key_word = '啦啦啦'
     url = f'http://www.gifmiao.com/search/{key_word}/3'
     xpath = "//img[@class='gifImg']/@xgif"
     r = requests.get(url)
@@ -28,12 +30,12 @@ def text_reply(msg):
         spllited = msg['Text'].split(' ')
         if spllited[0] == TRIGGER_WORD:
             key_word = ''
-            if len(spllited) > 0:
+            if len(spllited) > 1:
                 key_word = spllited[1]
             print(f'get key word {key_word}')
             get_image(key_word)
             itchat.send_image(image_name, toUserName=msg['ToUserName'])
 
 
-itchat.auto_login(True, enableCmdQR=2)
+itchat.auto_login(True)
 itchat.run()
