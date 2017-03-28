@@ -4,6 +4,7 @@ import requests
 import io
 import random
 import urllib.request
+from itchat.content import *
 
 from scrapy.http import HtmlResponse
 from scrapy.selector import Selector
@@ -23,7 +24,7 @@ def get_image(key_word):
     print(f'send image url: {image_url}')
 
 
-@itchat.msg_register([itchat.content.TEXT])
+@itchat.msg_register(TEXT, isGroupChat=True)
 def text_reply(msg):
     me = itchat.search_friends()['UserName']
     if me ==  msg['FromUserName']:
