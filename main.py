@@ -10,7 +10,7 @@ from scrapy.http import HtmlResponse
 from scrapy.selector import Selector
 
 image_name = 'tmp.gif' # to-do
-TRIGGER_WORD = '/gif'
+GIF_TRIGGER = '/g'
 
 def get_image(key_word):
     if not key_word:
@@ -24,19 +24,20 @@ def get_image(key_word):
     print(f'send image url: {image_url}')
 
 
+def gif_process(spllited):
+    key_word = ''
+    if len(spllited) > 1:
+        key_word = spllited[1]
+    print(f'get key word {key_word}')
+    get_image(key_word)
+    itchat.send_image(image_name, toUserName=msg['ToUserName'])
+
+
 @itchat.msg_register(TEXT, isGroupChat=True)
 def text_reply(msg):
-    me = itchat.search_friends()['UserName']
-    if me ==  msg['FromUserName']:
-        spllited = msg['Text'].split(' ')
-        if spllited[0] == TRIGGER_WORD:
-            key_word = ''
-            if len(spllited) > 1:
-                key_word = spllited[1]
-            print(f'get key word {key_word}')
-            get_image(key_word)
-            itchat.send_image(image_name, toUserName=msg['ToUserName'])
-
+    spllited = msg['Text'].split(' ')
+    if spllited[0] == GIF_TRIGGER:
+        gif_process(spllited)
 
 itchat.auto_login(True)
 itchat.run()
