@@ -54,9 +54,11 @@ def turing_process(spllited, receiver):
     elif code == 200000:
         itchat.send(f"{resJson['text']}: {resJson['url']}", receiver)
     elif code == 302000:
-        itchat.send('   '.join([f"{item['article']}: {item['detailurl']}" for item in resJson]))
+        info = resJson['list'][0]
+        itchat.send(f"{info['article']}: {info['detailurl']}", receiver)
     elif code == 308000:
-        itchat.send(f"名称: {resJson['name']}, 简介：{resJson['info']}, 地址：{resJson['detailurl']}", receiver)
+        info = resJson['list'][0]
+        itchat.send(f"名称: {info['name']}, 简介：{info['info']}, 地址：{info['detailurl']}", receiver)
 
 
 def incoming_msg(msg):
