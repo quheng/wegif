@@ -13,7 +13,7 @@ def gif_path(name):
     return f'./gif/{name}.gif'
 
 
-# 临时使用接受者的名字储存图片
+# The temporary use of the recipient the name of the store image
 def get_image(key_word, receiver):
     if not key_word:
         key_word = '啦啦啦'
