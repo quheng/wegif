@@ -1,18 +1,20 @@
 #coding=utf8
-import itchat, time
+import itchat
 import requests
-import io
 import random
 import urllib.request
 from itchat.content import *
-
-from scrapy.http import HtmlResponse
 from scrapy.selector import Selector
 
-image_name = 'tmp.gif' # to-do
 GIF_TRIGGER = '/g'
 
-def get_image(key_word):
+
+def gif_path(name):
+    return f'./gif/{name}'
+
+
+# 临时使用接受者的名字储存图片
+def get_image(key_word, receiver):
     if not key_word:
         key_word = '啦啦啦'
     url = f'http://www.gifmiao.com/search/{key_word}/3'
@@ -20,7 +22,7 @@ def get_image(key_word):
     r = requests.get(url)
     image_list = Selector(text=r.content).xpath(xpath).extract()
     image_url = image_list[random.randint(0, len(image_list)-1)]
-    urllib.request.urlretrieve(image_url, image_name)
+    urllib.request.urlretrieve(image_url, gif_path(receiver))
     print(f'send image url: {image_url}')
 
 
@@ -29,15 +31,28 @@ def gif_process(spllited, receiver):
     if len(spllited) > 1:
         key_word = spllited[1]
     print(f'get key word {key_word}')
-    get_image(key_word)
-    itchat.send_image(image_name, toUserName=receiver)
+    get_image(key_word, receiver)
+    print(receiver)
+    itchat.send_image(gif_path(receiver), toUserName=receiver)
+
+
+def incoming_msg(msg):
+    fromUserName = msg['FromUserName']
+    spllited = msg['Text'].split(' ')
+
+    if spllited[0] == GIF_TRIGGER:
+        gif_process(spllited, fromUserName)
+
+
+@itchat.msg_register(TEXT)
+def text_reply(msg):
+    incoming_msg(msg)
 
 
 @itchat.msg_register(TEXT, isGroupChat=True)
-def text_reply(msg):
-    spllited = msg['Text'].split(' ')
-    if spllited[0] == GIF_TRIGGER:
-        gif_process(spllited, msg['ToUserName'])
+def group_text_reply(msg):
+    incoming_msg(msg)
+
 
 itchat.auto_login(True)
 itchat.run()
