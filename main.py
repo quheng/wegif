@@ -24,20 +24,20 @@ def get_image(key_word):
     print(f'send image url: {image_url}')
 
 
-def gif_process(spllited):
+def gif_process(spllited, receiver):
     key_word = ''
     if len(spllited) > 1:
         key_word = spllited[1]
     print(f'get key word {key_word}')
     get_image(key_word)
-    itchat.send_image(image_name, toUserName=msg['ToUserName'])
+    itchat.send_image(image_name, toUserName=receiver)
 
 
 @itchat.msg_register(TEXT, isGroupChat=True)
 def text_reply(msg):
     spllited = msg['Text'].split(' ')
     if spllited[0] == GIF_TRIGGER:
-        gif_process(spllited)
+        gif_process(spllited, msg['ToUserName'])
 
 itchat.auto_login(True)
 itchat.run()
