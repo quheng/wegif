@@ -79,6 +79,6 @@ def text_reply(msg):
 def group_text_reply(msg):
     incoming_msg(msg)
 
-itchat.auto_login(True)
-# itchat.auto_login(True, enableCmdQR=True)
+# itchat.auto_login(True)
+itchat.auto_login(True, enableCmdQR=True)
 itchat.run()
