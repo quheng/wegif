@@ -10,7 +10,7 @@ GIF_TRIGGER = '/g'
 
 
 def gif_path(name):
-    return f'./gif/{name}'
+    return f'./gif/{name}.gif'
 
 
 # 临时使用接受者的名字储存图片
